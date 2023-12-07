@@ -1,7 +1,26 @@
-import {ToggleTheme} from '@/components/ToggleTheme'
+import CreatePostCard from "@/components/home/CreatePostCard";
+import PostCard from "@/components/home/PostCard";
+import TopDestinationsCard from "@/components/home/TopDestinationsCard";
+import TopTravellersCard from "@/components/home/TopTravellersCard";
 
 export default function Home() {
-  return (
-    <main>Hello<ToggleTheme /></main>
-  )
+    return (
+        <main className="max-w-7xl m-auto py-5">
+            <div className="flex space-x-4">
+                <div className="w-3/4">
+                    <CreatePostCard />
+                    <div className="mt-4 flex flex-col space-y-4">
+                        <PostCard />
+                        <PostCard />
+                        <PostCard />
+                        <PostCard />
+                    </div>
+                </div>
+                <div className="w-1/4 flex flex-col space-y-4">
+                    <TopDestinationsCard />
+                    <TopTravellersCard />
+                </div>
+            </div>
+        </main>
+    );
 }
