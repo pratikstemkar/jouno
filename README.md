@@ -1,44 +1,23 @@
-# Project jouno
-have a great journey
+# Jouno
 
-## MakeFile
+Travel with friends and find new travel buddies. Have a social environment to discuss new places to explore and get travel insights from pros.
 
-run all make commands with clean tests
+## How to Run?
+
+1. Start backend Go server
+
 ```bash
-make all build
-```
-
-build the application
-```bash
-make build
-```
-
-run the application
-```bash
+go mod tidy
+make docker-run
 make run
 ```
 
-Create DB container
+2. Start frontend Next.js app
+
 ```bash
-make docker-run
+cd web
+npm i
+npm run dev
 ```
 
-Shutdown DB container
-```bash
-make docker-down
-```
-
-live reload the application
-```bash
-make watch
-```
-
-run the test suite
-```bash
-make test
-```
-
-clean up binary from the last build
-```bash
-make clean
-```
+Made with :heart: by [pratikstemkar](https://pratikstemkar.in).
