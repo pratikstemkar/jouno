@@ -16,7 +16,7 @@ const Navbar = () => {
                                 width={35}
                                 height={75}
                             />
-                            <span>Jouno</span>
+                            <span>{process.env.NEXT_PUBLIC_APP_NAME}</span>
                         </div>
                     </a>
                 </div>

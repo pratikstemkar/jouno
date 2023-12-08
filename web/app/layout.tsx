@@ -4,11 +4,12 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import DevAlert from "@/components/layout/DevAlert";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-    title: "Jouno",
+    title: `${process.env.NEXT_PUBLIC_APP_NAME}`,
     description: "Travel to know your surroundings.",
 };
 
@@ -28,6 +29,7 @@ export default function RootLayout({
                     enableSystem
                     disableTransitionOnChange
                 >
+                    {process.env.NEXT_PUBLIC_ENV === "dev" && <DevAlert />}
                     <div>
                         <Navbar />
                         {children}
