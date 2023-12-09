@@ -6,12 +6,15 @@ require (
 	github.com/gofiber/fiber/v2 v2.51.0
 	github.com/jackc/pgx/v5 v5.5.0
 	github.com/joho/godotenv v1.5.1
+	github.com/google/uuid v1.4.0
+	github.com/uptrace/bun v1.1.16
+	github.com/uptrace/bun/dialect/pgdialect v1.1.16
+	github.com/uptrace/bun/extra/bundebug v1.1.16
 )
 
 require (
 	github.com/andybalholm/brotli v1.0.6 // indirect
 	github.com/fatih/color v1.15.0 // indirect
-	github.com/google/uuid v1.4.0 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20221227161230-091c0ba34f0a // indirect
 	github.com/jackc/puddle/v2 v2.2.1 // indirect
@@ -22,9 +25,6 @@ require (
 	github.com/mattn/go-runewidth v0.0.15 // indirect
 	github.com/rivo/uniseg v0.4.4 // indirect
 	github.com/tmthrgd/go-hex v0.0.0-20190904060850-447a3041c3bc // indirect
-	github.com/uptrace/bun v1.1.16 // indirect
-	github.com/uptrace/bun/dialect/pgdialect v1.1.16 // indirect
-	github.com/uptrace/bun/extra/bundebug v1.1.16 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasthttp v1.51.0 // indirect
 	github.com/valyala/tcplisten v1.0.0 // indirect
