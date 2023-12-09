@@ -4,15 +4,15 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"jouno/internal/model"
 	"log"
 	"os"
 	"time"
 
 	_ "github.com/jackc/pgx/v5/stdlib"
 	_ "github.com/joho/godotenv/autoload"
-	"github.com/uptrace/bun"
-	"github.com/uptrace/bun/dialect/pgdialect"
-	"github.com/uptrace/bun/extra/bundebug"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
 type Service interface {
@@ -20,7 +20,7 @@ type Service interface {
 }
 
 type service struct {
-	db *bun.DB
+	db *gorm.DB
 }
 
 var (
@@ -33,15 +33,19 @@ var (
 
 func New() Service {
 	connStr := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable", username, password, host, port, database)
-	sqlDb, err := sql.Open("pgx", connStr)
+	sqlDB, err := sql.Open("pgx", connStr)
 	if err != nil {
 		log.Fatal(err)
 	}
-	db := bun.NewDB(sqlDb, pgdialect.New())
-	db.AddQueryHook(bundebug.NewQueryHook(
-		bundebug.WithVerbose(true),
-		bundebug.FromEnv("BUNDEBUG"),
-	))
+	db, err := gorm.Open(postgres.New(postgres.Config{
+		Conn: sqlDB,
+	}), &gorm.Config{})
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("Connection Opened to Database")
+	db.AutoMigrate(&model.User{})
+	fmt.Println("Database Migrated")
 	s := &service{db: db}
 	return s
 }
@@ -50,7 +54,8 @@ func (s *service) Health() map[string]string {
 	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
 	defer cancel()
 
-	err := s.db.PingContext(ctx)
+	sqlDB, _ := s.db.DB()
+	err := sqlDB.PingContext(ctx)
 	if err != nil {
 		log.Fatalf(fmt.Sprintf("db down: %v", err))
 	}
