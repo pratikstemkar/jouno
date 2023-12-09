@@ -2,21 +2,25 @@ package main
 
 import (
 	"fmt"
-	"jouno/internal/server"
+	"jouno/internal/database"
+	"jouno/internal/router"
 	"os"
 	"strconv"
 
+	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	_ "github.com/joho/godotenv/autoload"
 )
 
 func main() {
-	server := server.New()
-	server.Use(cors.New())
+	app := fiber.New()
+	app.Use(cors.New())
 
-	server.RegisterFiberRoutes()
+	database.ConnectDB()
+
+	router.SetupRoutes(app)
 	port, _ := strconv.Atoi(os.Getenv("PORT"))
-	err := server.Listen(fmt.Sprintf(":%d", port))
+	err := app.Listen(fmt.Sprintf(":%d", port))
 	if err != nil {
 		panic("Cannot start server.")
 	}
