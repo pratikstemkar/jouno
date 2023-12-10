@@ -20,7 +20,7 @@ export interface LoginRequest {
 
 export const api = createApi({
     baseQuery: fetchBaseQuery({
-        baseUrl: "/",
+        baseUrl: "http://localhost:8080/api/v1/auth/",
         prepareHeaders: (headers, { getState }) => {
             const token = (getState() as RootState).auth.token;
             if (token) {

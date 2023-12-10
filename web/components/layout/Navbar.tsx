@@ -1,9 +1,16 @@
+"use client";
+
 // import { ToggleTheme } from "../ToggleTheme";
 import Image from "next/image";
 import LoginDialog from "../auth/LoginDialog";
+import { useAppSelector } from "@/lib/hooks/hooks";
+import { selectCurrentUser } from "@/lib/features/authSlice";
+import { useAuth } from "@/lib/hooks/useAuth";
 // import { Button } from "../ui/button";
 
 const Navbar = () => {
+    const auth = useAuth();
+
     return (
         <>
             <nav className="flex justify-between w-full px-20 py-2">
@@ -21,6 +28,7 @@ const Navbar = () => {
                     </a>
                 </div>
                 <div className="flex space-x-5">
+                    {JSON.stringify(auth.user)}
                     <LoginDialog />
                     {/* <Button variant="ghost">Register</Button> */}
                     {/* <ToggleTheme /> */}
