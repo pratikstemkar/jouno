@@ -29,7 +29,7 @@ func isEmail(email string) bool {
 func getUserByEmail(e string) (*model.User, error) {
 	db := database.DB
 	var user model.User
-	if err := db.Where(&model.User{Email: e}).Find(&user).Error; err != nil {
+	if err := db.Where(&model.User{Email: e}).Preload("Roles").Find(&user).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil
 		}
@@ -41,13 +41,21 @@ func getUserByEmail(e string) (*model.User, error) {
 func getUserByUsername(u string) (*model.User, error) {
 	db := database.DB
 	var user model.User
-	if err := db.Where(&model.User{Username: u}).Find(&user).Error; err != nil {
+	if err := db.Where(&model.User{Username: u}).Preload("Roles").Find(&user).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil
 		}
 		return nil, err
 	}
 	return &user, nil
+}
+
+func GetRolesList(roles []model.Role) []string {
+	var rolesList []string
+	for _, role := range roles {
+		rolesList = append(rolesList, role.Name)
+	}
+	return rolesList
 }
 
 func Login(c *fiber.Ctx) error {
@@ -61,6 +69,7 @@ func Login(c *fiber.Ctx) error {
 		Username string    `json:"username"`
 		Email    string    `json:"email"`
 		Password string    `json:"password"`
+		Roles    []string  `json:"roles"`
 	}
 
 	input := new(LoginInput)
@@ -96,6 +105,7 @@ func Login(c *fiber.Ctx) error {
 			Username: userModel.Username,
 			Email:    userModel.Email,
 			Password: userModel.Password,
+			Roles:    GetRolesList(userModel.Roles),
 		}
 	}
 
@@ -113,6 +123,7 @@ func Login(c *fiber.Ctx) error {
 	claims["username"] = userData.Username
 	claims["id"] = userData.ID
 	claims["exp"] = time.Now().Add(time.Hour * 72).Unix()
+	claims["roles"] = []string(userData.Roles)
 
 	t, err := token.SignedString([]byte(config.Config("JWT_SECRET")))
 	if err != nil {

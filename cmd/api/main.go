@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
+	"jouno/internal/config"
 	"jouno/internal/database"
 	"jouno/internal/router"
-	"os"
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
@@ -19,7 +19,7 @@ func main() {
 	database.ConnectDB()
 
 	router.SetupRoutes(app)
-	port, _ := strconv.Atoi(os.Getenv("PORT"))
+	port, _ := strconv.Atoi(config.Config("PORT"))
 	err := app.Listen(fmt.Sprintf(":%d", port))
 	if err != nil {
 		panic("Cannot start server.")

@@ -21,7 +21,16 @@ type User struct {
 	Website   string         `json:"website"`
 	Location  string         `json:"location"`
 	Verified  bool           `json:"verified"`
+	Roles     []Role         `gorm:"many2many:user_roles;"`
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
+}
+
+type Role struct {
+	ID          uuid.UUID `json:"id" gorm:"primaryKey;type:uuid;default:uuid_generate_v4()"`
+	Name        string    `json:"name" gorm:"unique;not null"`
+	Description string    `json:"description"`
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
 }

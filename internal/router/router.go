@@ -20,6 +20,13 @@ func SetupRoutes(app *fiber.App) {
 	user.Get("/:id", handler.GetUser)
 	user.Put("/:id", middleware.Protected(), handler.UpdateUser)
 	user.Delete("/:id", middleware.Protected(), handler.DeleteUser)
+	user.Post("/:id/role/:roleName", handler.AddRoleToUser)
+
+	role := v1.Group("/role")
+	role.Post("", handler.CreateRole)
+	role.Get("/:id", handler.GetRole)
+	role.Put("/:id", handler.UpdateRole)
+	role.Delete("/:id", handler.DeleteRole)
 
 	auth := v1.Group("/auth")
 	auth.Post("/login", handler.Login)

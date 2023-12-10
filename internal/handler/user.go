@@ -34,11 +34,23 @@ func validUser(id string, p string) bool {
 	return true
 }
 
+func validRole(t *jwt.Token, roleName string) bool {
+	claims := t.Claims.(jwt.MapClaims)
+	roles := claims["roles"].([]interface{})
+	roleList := roles
+	for _, role := range roleList {
+		if role.(string) == roleName {
+			return true
+		}
+	}
+	return false
+}
+
 func GetUser(c *fiber.Ctx) error {
 	id := c.Params("id")
 	db := database.DB
 	var user model.User
-	db.Find(&user, "id = ?", id)
+	db.Preload("Roles").Find(&user, "id = ?", id)
 	if user.Username == "" {
 		return c.Status(404).JSON(fiber.Map{
 			"status":  "error",
@@ -152,6 +164,45 @@ func UpdateUser(c *fiber.Ctx) error {
 	})
 }
 
+func AddRoleToUser(c *fiber.Ctx) error {
+	id := c.Params("id")
+	roleName := c.Params("roleName")
+
+	db := database.DB
+	var user model.User
+	var role model.Role
+	db.First(&user, "id = ?", id)
+	if user.Username == "" {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+			"status":  "error",
+			"message": "User not found with ID",
+			"data":    nil,
+		})
+	}
+	db.First(&role, "name = ?", roleName)
+	if role.Name == "" {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+			"status":  "error",
+			"message": "Role not found with Name",
+			"data":    nil,
+		})
+	}
+
+	if err := db.Model(&user).Association("Roles").Append(&role); err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"status":  "error",
+			"message": "Role not added to user",
+			"data":    err,
+		})
+	}
+
+	return c.JSON(fiber.Map{
+		"status":  "success",
+		"message": "Role added to user successfully",
+		"data":    user,
+	})
+}
+
 func DeleteUser(c *fiber.Ctx) error {
 	type PasswordInput struct {
 		Password string `json:"password"`
@@ -173,6 +224,14 @@ func DeleteUser(c *fiber.Ctx) error {
 		return c.Status(500).JSON(fiber.Map{
 			"status":  "error",
 			"message": "Invalid token id",
+			"data":    nil,
+		})
+	}
+
+	if !validRole(token, "admin") {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"status":  "error",
+			"message": "Not valid role",
 			"data":    nil,
 		})
 	}
