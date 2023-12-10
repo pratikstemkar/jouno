@@ -3,15 +3,13 @@ package middleware
 import (
 	"jouno/internal/config"
 
-	jwtware "github.com/gofiber/contrib/jwt"
 	"github.com/gofiber/fiber/v2"
+	jwtware "github.com/gofiber/jwt/v2"
 )
 
 func Protected() fiber.Handler {
 	return jwtware.New(jwtware.Config{
-		SigningKey: jwtware.SigningKey{
-			Key: []byte(config.Config("JWT_SECRET")),
-		},
+		SigningKey:   []byte(config.Config("JWT_SECRET")),
 		ErrorHandler: jwtError,
 	})
 }

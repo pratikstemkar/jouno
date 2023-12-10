@@ -3,10 +3,9 @@ package handler
 import (
 	"jouno/internal/database"
 	"jouno/internal/model"
-	"strconv"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/golang-jwt/jwt/v5"
+	"github.com/golang-jwt/jwt/v4"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -16,21 +15,16 @@ func hashPassword(password string) (string, error) {
 }
 
 func validToken(t *jwt.Token, id string) bool {
-	n, err := strconv.Atoi(id)
-	if err != nil {
-		return false
-	}
-
 	claims := t.Claims.(jwt.MapClaims)
-	uid := int(claims["id"].(float64))
+	uid := string(claims["id"].(string))
 
-	return uid == n
+	return uid == id
 }
 
 func validUser(id string, p string) bool {
 	db := database.DB
 	var user model.User
-	db.First(&user, id)
+	db.First(&user, "id = ?", id)
 	if user.Username == "" {
 		return false
 	}
@@ -44,7 +38,7 @@ func GetUser(c *fiber.Ctx) error {
 	id := c.Params("id")
 	db := database.DB
 	var user model.User
-	db.Find(&user, id)
+	db.Find(&user, "id = ?", id)
 	if user.Username == "" {
 		return c.Status(404).JSON(fiber.Map{
 			"status":  "error",
@@ -107,7 +101,14 @@ func CreateUser(c *fiber.Ctx) error {
 
 func UpdateUser(c *fiber.Ctx) error {
 	type UpdateUserInput struct {
-		Bio string `json:"bio"`
+		Name     string `json:"name"`
+		Pronouns string `json:"pronouns"`
+		Banner   string `json:"banner"`
+		Avatar   string `json:"avatar"`
+		Gender   string `json:"gender"`
+		Bio      string `json:"bio"`
+		Website  string `json:"website"`
+		Location string `json:"location"`
 	}
 
 	var uui UpdateUserInput
@@ -133,8 +134,15 @@ func UpdateUser(c *fiber.Ctx) error {
 	db := database.DB
 	var user model.User
 
-	db.First(&user, id)
+	db.First(&user, "id = ?", id)
+	user.Name = uui.Name
+	user.Pronouns = uui.Pronouns
+	user.Banner = uui.Banner
+	user.Avatar = uui.Avatar
+	user.Gender = uui.Gender
 	user.Bio = uui.Bio
+	user.Website = uui.Website
+	user.Location = uui.Location
 	db.Save(&user)
 
 	return c.JSON(fiber.Map{
@@ -179,7 +187,7 @@ func DeleteUser(c *fiber.Ctx) error {
 
 	db := database.DB
 	var user model.User
-	db.First(&user, id)
+	db.First(&user, "id = ?", id)
 	db.Delete(&user)
 
 	return c.JSON(fiber.Map{
