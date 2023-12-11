@@ -27,6 +27,7 @@ import {
 import { useDispatch } from "react-redux";
 import { useLoginMutation } from "@/lib/services/auth";
 import { setCredentials } from "@/lib/features/authSlice";
+import { Loader2Icon } from "lucide-react";
 
 const formSchema = z.object({
     identity: z.string().min(4, {
@@ -147,7 +148,15 @@ const LoginDialog = () => {
                                 </FormItem>
                             )}
                         />
-                        <Button type="submit">Login</Button>
+                        <Button
+                            type="submit"
+                            disabled={isLoading}
+                        >
+                            {isLoading ? (
+                                <Loader2Icon className="animate-spin h-4 w-4 mr-2" />
+                            ) : null}
+                            <span>Login</span>
+                        </Button>
                     </form>
                 </Form>
             </DialogContent>
