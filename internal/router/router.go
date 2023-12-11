@@ -22,6 +22,9 @@ func SetupRoutes(app *fiber.App) {
 	user.Delete("/:id", middleware.Protected(), handler.DeleteUser)
 	user.Post("/:id/role/:roleName", handler.AddRoleToUser)
 
+	profile := v1.Group("/profile")
+	profile.Get("/:id", handler.GetProfile)
+
 	role := v1.Group("/role")
 	role.Post("", handler.CreateRole)
 	role.Get("/:id", handler.GetRole)

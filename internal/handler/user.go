@@ -3,9 +3,11 @@ package handler
 import (
 	"jouno/internal/database"
 	"jouno/internal/model"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"
+	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -62,6 +64,54 @@ func GetUser(c *fiber.Ctx) error {
 		"status":  "success",
 		"message": "User Found",
 		"data":    user,
+	})
+}
+
+func GetProfile(c *fiber.Ctx) error {
+	id := c.Params("id")
+	db := database.DB
+	var user model.User
+	db.Preload("Roles").Find(&user, "id = ?", id)
+	if user.Username == "" {
+		return c.Status(404).JSON(fiber.Map{
+			"status":  "error",
+			"message": "No User found with ID",
+			"data":    nil,
+		})
+	}
+	type Profile struct {
+		ID        uuid.UUID `json:"id"`
+		Username  string    `json:"username"`
+		Email     string    `json:"email"`
+		Name      string    `json:"name"`
+		Bio       string    `json:"bio"`
+		Location  string    `json:"location"`
+		Pronouns  string    `json:"pronouns"`
+		Website   string    `json:"website"`
+		Gender    string    `json:"gender"`
+		Avatar    string    `json:"avatar"`
+		Banner    string    `json:"banner"`
+		Verified  bool      `json:"verified"`
+		CreatedAt time.Time
+	}
+	var profile Profile
+	profile.ID = user.ID
+	profile.Username = user.Username
+	profile.Email = user.Email
+	profile.Name = user.Name
+	profile.Bio = user.Bio
+	profile.Location = user.Location
+	profile.Pronouns = user.Pronouns
+	profile.Website = user.Website
+	profile.Gender = user.Gender
+	profile.Avatar = user.Avatar
+	profile.Banner = user.Banner
+	profile.Verified = user.Verified
+	profile.CreatedAt = user.CreatedAt
+	return c.JSON(fiber.Map{
+		"status":  "success",
+		"message": "Profile Found",
+		"data":    profile,
 	})
 }
 
