@@ -90,6 +90,17 @@ func CreateUser(c *fiber.Ctx) error {
 		})
 	}
 
+	var role model.Role
+	db.Find(&role, "name = ?", "user")
+	if role.Name == "" {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"status":  "error",
+			"message": "Error fetching role to add to user",
+			"data":    err,
+		})
+	}
+	user.Roles = append(user.Roles, role)
+	user.Avatar = "https://i.pinimg.com/1200x/63/17/29/631729e14e006e3616471749d8336eac.jpg"
 	user.Password = hash
 	if err := db.Create(&user).Error; err != nil {
 		return c.Status(500).JSON(fiber.Map{
