@@ -14,8 +14,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { logout } from "@/lib/features/authSlice";
 import { useAppDispatch } from "@/lib/hooks/hooks";
+import Link from "next/link";
 
 type UserNavProps = {
+    id: string;
     username: string;
     email: string;
     avatar: string;
@@ -59,7 +61,7 @@ export const UserNav = (props: UserNavProps) => {
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
                     <DropdownMenuItem>
-                        Profile
+                        <Link href={`/profile/${props.id}`}>Profile</Link>
                         <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
                     </DropdownMenuItem>
                     <DropdownMenuItem>

@@ -19,7 +19,7 @@ export interface LoginRequest {
     password: string;
 }
 
-export const api = createApi({
+export const authApi = createApi({
     baseQuery: fetchBaseQuery({
         baseUrl: "http://localhost:8080/api/v1/auth/",
         prepareHeaders: (headers, { getState }) => {
@@ -44,4 +44,4 @@ export const api = createApi({
     }),
 });
 
-export const { useLoginMutation, useProtectedMutation } = api;
+export const { useLoginMutation, useProtectedMutation } = authApi;
