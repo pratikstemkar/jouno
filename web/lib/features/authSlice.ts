@@ -16,12 +16,16 @@ const authSlice = createSlice({
             state,
             {
                 payload: { user, token },
-            }: PayloadAction<{ user: User; token: string }>
+            }: PayloadAction<{ user: User | null; token: string | null }>
         ) => {
             state.user = user;
             state.token = token;
+            localStorage.setItem("user", JSON.stringify(user));
+            localStorage.setItem("token", token!);
         },
         logout: state => {
+            localStorage.removeItem("user");
+            localStorage.removeItem("token");
             state.user = null;
             state.token = null;
         },

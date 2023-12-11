@@ -5,13 +5,28 @@ import Image from "next/image";
 import LoginDialog from "../auth/LoginDialog";
 import { useAuth } from "@/lib/hooks/useAuth";
 import { UserNav } from "./Usernav";
-import { useAppSelector } from "@/lib/hooks/hooks";
-import { selectCurrentToken } from "@/lib/features/authSlice";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks/hooks";
+import { selectCurrentToken, setCredentials } from "@/lib/features/authSlice";
+import { useEffect } from "react";
 // import { Button } from "../ui/button";
 
 const Navbar = () => {
     const auth = useAuth();
     const token = useAppSelector(selectCurrentToken);
+    const dispatch = useAppDispatch();
+
+    useEffect(() => {
+        if (localStorage.getItem("user")) {
+            console.log("user found in localstorage");
+            dispatch(
+                setCredentials({
+                    user: JSON.parse(localStorage.getItem("user")!),
+                    token: localStorage.getItem("token"),
+                })
+            );
+        }
+        console.log("in navbar useeffect");
+    }, []);
 
     return (
         <>
