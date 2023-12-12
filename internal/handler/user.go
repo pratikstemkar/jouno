@@ -174,6 +174,7 @@ func CreateUser(c *fiber.Ctx) error {
 
 func UpdateUser(c *fiber.Ctx) error {
 	type UpdateUserInput struct {
+		ID       string `json:"id"`
 		Name     string `json:"name"`
 		Pronouns string `json:"pronouns"`
 		Banner   string `json:"banner"`
