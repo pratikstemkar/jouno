@@ -24,7 +24,7 @@ import {
 } from "../ui/form";
 import { Loader2Icon } from "lucide-react";
 import { useState } from "react";
-import { Profile } from "@/lib/services/profile";
+import { Profile, useUpdateProfileMutation } from "@/lib/services/profile";
 
 const formSchema = z.object({
     name: z.string().min(4, {
@@ -55,9 +55,21 @@ const EditProfile = (props: Profile) => {
     });
 
     const [error, setError] = useState("");
+    const [updateProfile, { isLoading }] = useUpdateProfileMutation();
 
     const onSubmit = (values: z.infer<typeof formSchema>) => {
         console.log(values);
+        updateProfile({
+            id: props.id,
+            ...values,
+        }).then((data: any) => {
+            if (data.error) {
+                console.log(data.error);
+                setError(data.error.data.message);
+            } else {
+                console.log(data.data);
+            }
+        });
     };
 
     return (
@@ -210,10 +222,10 @@ const EditProfile = (props: Profile) => {
                         <div>
                             <Button
                                 type="submit"
-                                disabled={true}
+                                disabled={isLoading}
                                 className="mt-4"
                             >
-                                {false ? (
+                                {isLoading ? (
                                     <Loader2Icon className="animate-spin h-4 w-4 mr-2" />
                                 ) : null}
                                 <span>Save Changes</span>

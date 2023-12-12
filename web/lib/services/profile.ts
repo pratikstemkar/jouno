@@ -23,6 +23,18 @@ export interface Profile {
     CreatedAt: string;
 }
 
+export interface UpdateProfileRequest {
+    id: string;
+    name: string;
+    pronouns: string;
+    gender: string;
+    banner: string;
+    avatar: string;
+    bio: string;
+    website: string;
+    location: string;
+}
+
 export const profileApi = createApi({
     reducerPath: "profileApi",
     baseQuery: fetchBaseQuery({
@@ -39,7 +51,14 @@ export const profileApi = createApi({
         getProfile: builder.query<Data, string>({
             query: id => `/${id}`,
         }),
+        updateProfile: builder.mutation<Data, UpdateProfileRequest>({
+            query: credentials => ({
+                url: `/${credentials.id}`,
+                method: "PUT",
+                body: credentials,
+            }),
+        }),
     }),
 });
 
-export const { useGetProfileQuery } = profileApi;
+export const { useGetProfileQuery, useUpdateProfileMutation } = profileApi;
