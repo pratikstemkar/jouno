@@ -24,45 +24,52 @@ import {
     FormLabel,
     FormMessage,
 } from "../ui/form";
-import { useLoginMutation } from "@/lib/services/auth";
-import { setCredentials } from "@/lib/features/authSlice";
+import { useRegisterMutation } from "@/lib/services/auth";
 import { Loader2Icon } from "lucide-react";
 import { useAppDispatch } from "@/lib/hooks/hooks";
 
 const formSchema = z.object({
-    identity: z.string().min(4, {
-        message: "Username/Email must be atleast 4 characters.",
+    username: z.string().min(4, {
+        message: "Username must be atleast 4 characters.",
     }),
+    email: z
+        .string()
+        .min(6, {
+            message: "Email must be atleast 6 characters.",
+        })
+        .email(),
     password: z.string().min(6, {
+        message: "Password must be atleast 6 characters.",
+    }),
+    confirmpassword: z.string().min(6, {
         message: "Password must be atleast 6 characters.",
     }),
 });
 
-const LoginDialog = () => {
+const RegisterDialog = () => {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            identity: "",
+            username: "",
+            email: "",
             password: "",
+            confirmpassword: "",
         },
     });
 
-    const dispatch = useAppDispatch();
-    const [login, { isLoading }] = useLoginMutation();
+    const [register, { isLoading }] = useRegisterMutation();
 
     const onSubmit = (values: z.infer<typeof formSchema>) => {
         console.log(values);
-        login(values).then((data: any) => {
+        register({
+            username: values.username,
+            email: values.email,
+            password: values.password,
+        }).then((data: any) => {
             if (data.error) {
                 console.log(data.error);
             } else {
                 console.log(data.data);
-                dispatch(
-                    setCredentials({
-                        user: data.data.user,
-                        token: data.data.data,
-                    })
-                );
             }
         });
     };
@@ -70,15 +77,15 @@ const LoginDialog = () => {
     return (
         <Dialog>
             <DialogTrigger>
-                <Button>Login</Button>
+                <Button>Register</Button>
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle className="text-2xl">
-                        Welcome back to {process.env.NEXT_PUBLIC_APP_NAME}
+                        Welcome to {process.env.NEXT_PUBLIC_APP_NAME}
                     </DialogTitle>
                     <DialogDescription>
-                        Enter your login credentials here.
+                        Enter your credentials to register here.
                     </DialogDescription>
                 </DialogHeader>
                 {/* <div className="flex w-full space-x-2">
@@ -110,17 +117,33 @@ const LoginDialog = () => {
                 <Form {...form}>
                     <form
                         onSubmit={form.handleSubmit(onSubmit)}
-                        className="space-y-8"
+                        className="space-y-4"
                     >
                         <FormField
                             control={form.control}
-                            name="identity"
+                            name="username"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Username/Email</FormLabel>
+                                    <FormLabel>Username</FormLabel>
                                     <FormControl>
                                         <Input
-                                            placeholder="Enter your username/email"
+                                            placeholder="Enter a username"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="email"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Email</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            placeholder="Enter your email"
                                             {...field}
                                         />
                                     </FormControl>
@@ -148,6 +171,22 @@ const LoginDialog = () => {
                                 </FormItem>
                             )}
                         />
+                        <FormField
+                            control={form.control}
+                            name="confirmpassword"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Confirm Password</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            type="password"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
                         <Button
                             type="submit"
                             disabled={isLoading}
@@ -155,7 +194,7 @@ const LoginDialog = () => {
                             {isLoading ? (
                                 <Loader2Icon className="animate-spin h-4 w-4 mr-2" />
                             ) : null}
-                            <span>Login</span>
+                            <span>Register</span>
                         </Button>
                     </form>
                 </Form>
@@ -164,4 +203,4 @@ const LoginDialog = () => {
     );
 };
 
-export default LoginDialog;
+export default RegisterDialog;

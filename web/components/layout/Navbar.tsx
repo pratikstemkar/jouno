@@ -6,26 +6,32 @@ import LoginDialog from "../auth/LoginDialog";
 import { useAuth } from "@/lib/hooks/useAuth";
 import { UserNav } from "./Usernav";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/hooks";
-import { selectCurrentToken, setCredentials } from "@/lib/features/authSlice";
+import {
+    logout,
+    selectCurrentToken,
+    setCredentials,
+} from "@/lib/features/authSlice";
 import { useEffect } from "react";
+import RegisterDialog from "../auth/RegiterDialog";
 // import { Button } from "../ui/button";
 
 const Navbar = () => {
     const auth = useAuth();
-    const token = useAppSelector(selectCurrentToken);
     const dispatch = useAppDispatch();
 
     useEffect(() => {
-        if (localStorage.getItem("user")) {
-            console.log("user found in localstorage");
+        if (localStorage.getItem("token")) {
+            console.log("token found in localstorage");
             dispatch(
                 setCredentials({
                     user: JSON.parse(localStorage.getItem("user")!),
                     token: localStorage.getItem("token"),
                 })
             );
+        } else {
+            console.log("token not found");
+            dispatch(logout());
         }
-        console.log("in navbar useeffect");
     }, []);
 
     return (
@@ -47,7 +53,14 @@ const Navbar = () => {
                 <div className="flex space-x-5">
                     {/* {JSON.stringify(auth.user)} */}
                     {/* {JSON.stringify(token)} */}
-                    {auth.user ? <UserNav {...auth.user} /> : <LoginDialog />}
+                    {auth.user ? (
+                        <UserNav {...auth.user} />
+                    ) : (
+                        <>
+                            <LoginDialog />
+                            <RegisterDialog />
+                        </>
+                    )}
                     {/* <Button variant="ghost">Register</Button> */}
                     {/* <ToggleTheme /> */}
                 </div>
