@@ -71,7 +71,7 @@ func GetProfile(c *fiber.Ctx) error {
 	id := c.Params("id")
 	db := database.DB
 	var user model.User
-	db.Preload("Roles").Find(&user, "id = ?", id)
+	db.Preload("Roles").Find(&user, "username = ?", id)
 	if user.Username == "" {
 		return c.Status(404).JSON(fiber.Map{
 			"status":  "error",
