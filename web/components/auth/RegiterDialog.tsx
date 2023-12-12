@@ -26,7 +26,7 @@ import {
 } from "../ui/form";
 import { useRegisterMutation } from "@/lib/services/auth";
 import { Loader2Icon } from "lucide-react";
-import { useAppDispatch } from "@/lib/hooks/hooks";
+import { useState } from "react";
 
 const formSchema = z.object({
     username: z.string().min(4, {
@@ -57,6 +57,7 @@ const RegisterDialog = () => {
         },
     });
 
+    const [error, setError] = useState("");
     const [register, { isLoading }] = useRegisterMutation();
 
     const onSubmit = (values: z.infer<typeof formSchema>) => {
@@ -67,7 +68,8 @@ const RegisterDialog = () => {
             password: values.password,
         }).then((data: any) => {
             if (data.error) {
-                console.log(data.error);
+                console.log(data.error.data.data.Detail);
+                setError(data.error.data.data.Detail);
             } else {
                 console.log(data.data);
             }
@@ -196,6 +198,9 @@ const RegisterDialog = () => {
                             ) : null}
                             <span>Register</span>
                         </Button>
+                        <FormDescription className="text-red-500">
+                            {error}
+                        </FormDescription>
                     </form>
                 </Form>
             </DialogContent>

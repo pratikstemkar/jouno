@@ -28,6 +28,7 @@ import { useLoginMutation } from "@/lib/services/auth";
 import { setCredentials } from "@/lib/features/authSlice";
 import { Loader2Icon } from "lucide-react";
 import { useAppDispatch } from "@/lib/hooks/hooks";
+import { useState } from "react";
 
 const formSchema = z.object({
     identity: z.string().min(4, {
@@ -47,6 +48,7 @@ const LoginDialog = () => {
         },
     });
 
+    const [error, setError] = useState("");
     const dispatch = useAppDispatch();
     const [login, { isLoading }] = useLoginMutation();
 
@@ -55,6 +57,7 @@ const LoginDialog = () => {
         login(values).then((data: any) => {
             if (data.error) {
                 console.log(data.error);
+                setError(data.error.data.message);
             } else {
                 console.log(data.data);
                 dispatch(
@@ -157,6 +160,9 @@ const LoginDialog = () => {
                             ) : null}
                             <span>Login</span>
                         </Button>
+                        <FormDescription className="text-red-500">
+                            {error}
+                        </FormDescription>
                     </form>
                 </Form>
             </DialogContent>

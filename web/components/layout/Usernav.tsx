@@ -61,7 +61,7 @@ export const UserNav = (props: UserNavProps) => {
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
                     <DropdownMenuItem>
-                        <Link href={`/profile/${props.id}`}>Profile</Link>
+                        <Link href={`/profile/${props.username}`}>Profile</Link>
                         <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
                     </DropdownMenuItem>
                     <DropdownMenuItem>

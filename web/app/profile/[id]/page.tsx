@@ -38,8 +38,8 @@ const Page = ({ params }: { params: { id: string } }) => {
                                     {data?.data?.username}
                                 </AvatarFallback>
                             </Avatar>
-                            {auth?.user?.id === profileId ? (
-                                <EditProfile />
+                            {auth?.user?.username === profileId ? (
+                                <EditProfile {...data.data} />
                             ) : null}
                         </div>
                         <div className="mt-2">
