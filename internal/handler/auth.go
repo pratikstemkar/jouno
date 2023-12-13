@@ -154,3 +154,22 @@ func Login(c *fiber.Ctx) error {
 	})
 
 }
+
+func CheckTokenAuth(c *fiber.Ctx) error {
+	id := c.Params("id")
+	token := c.Locals("user").(*jwt.Token)
+
+	if !validToken(token, id) {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"status":  "error",
+			"message": "Invalid Token",
+			"data":    nil,
+		})
+	}
+
+	return c.JSON(fiber.Map{
+		"status":  "success",
+		"message": "Token is valid.",
+		"data":    nil,
+	})
+}

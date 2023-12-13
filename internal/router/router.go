@@ -35,4 +35,5 @@ func SetupRoutes(app *fiber.App) {
 	auth := v1.Group("/auth")
 	auth.Post("/login", handler.Login)
 	auth.Post("/register", handler.CreateUser)
+	auth.Get("/:id", middleware.Protected(), handler.CheckTokenAuth)
 }

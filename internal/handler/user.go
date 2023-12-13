@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"jouno/internal/database"
 	"jouno/internal/model"
 	"time"
@@ -19,8 +20,11 @@ func hashPassword(password string) (string, error) {
 func validToken(t *jwt.Token, id string) bool {
 	claims := t.Claims.(jwt.MapClaims)
 	uid := string(claims["id"].(string))
+	exp := float64(claims["exp"].(float64))
+	fmt.Println(exp)
+	fmt.Println(time.Now().Unix())
 
-	return uid == id
+	return uid == id && exp > float64(time.Now().Unix())
 }
 
 func validUser(id string, p string) bool {
@@ -198,7 +202,7 @@ func UpdateUser(c *fiber.Ctx) error {
 	token := c.Locals("user").(*jwt.Token)
 
 	if !validToken(token, id) {
-		return c.Status(500).JSON(fiber.Map{
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
 			"status":  "error",
 			"message": "Invalid token id",
 			"data":    nil,
