@@ -9,12 +9,11 @@ import {
     DropdownMenuItem,
     DropdownMenuLabel,
     DropdownMenuSeparator,
-    DropdownMenuShortcut,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { logout } from "@/lib/features/authSlice";
 import { useAppDispatch } from "@/lib/hooks/hooks";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 type UserNavProps = {
     id: string;
@@ -26,6 +25,7 @@ type UserNavProps = {
 
 export const UserNav = (props: UserNavProps) => {
     const dispatch = useAppDispatch();
+    const router = useRouter();
 
     return (
         <DropdownMenu>
@@ -60,24 +60,24 @@ export const UserNav = (props: UserNavProps) => {
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
-                    <DropdownMenuItem>
-                        <Link href={`/profile/${props.username}`}>Profile</Link>
-                        <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+                    <DropdownMenuItem
+                        onClick={() =>
+                            router.push(`/profile/${props.username}`)
+                        }
+                        className="hover:cursor-pointer"
+                    >
+                        Profile
                     </DropdownMenuItem>
-                    <DropdownMenuItem>
-                        Billing
-                        <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                        Settings
-                        <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>New Team</DropdownMenuItem>
+                    {/* <DropdownMenuItem>Billing</DropdownMenuItem>
+                    <DropdownMenuItem>Settings</DropdownMenuItem>
+                    <DropdownMenuItem>New Team</DropdownMenuItem> */}
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => dispatch(logout())}>
+                <DropdownMenuItem
+                    onClick={() => dispatch(logout())}
+                    className="hover:cursor-pointer"
+                >
                     Log out
-                    <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>

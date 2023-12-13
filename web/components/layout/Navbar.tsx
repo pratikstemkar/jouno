@@ -5,12 +5,8 @@ import Image from "next/image";
 import LoginDialog from "../auth/LoginDialog";
 import { useAuth } from "@/lib/hooks/useAuth";
 import { UserNav } from "./Usernav";
-import { useAppDispatch, useAppSelector } from "@/lib/hooks/hooks";
-import {
-    logout,
-    selectCurrentToken,
-    setCredentials,
-} from "@/lib/features/authSlice";
+import { useAppDispatch } from "@/lib/hooks/hooks";
+import { logout, setCredentials } from "@/lib/features/authSlice";
 import { useEffect } from "react";
 import RegisterDialog from "../auth/RegiterDialog";
 // import { Button } from "../ui/button";

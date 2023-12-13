@@ -25,6 +25,7 @@ import {
 import { Loader2Icon } from "lucide-react";
 import { useState } from "react";
 import { Profile, useUpdateProfileMutation } from "@/lib/services/profile";
+import { useAppDispatch } from "@/lib/hooks/hooks";
 
 const formSchema = z.object({
     name: z.string().min(4, {

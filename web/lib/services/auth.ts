@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { RootState } from "../store";
+import { Data } from "./profile";
 
 export interface User {
     id: string;
@@ -59,8 +60,15 @@ export const authApi = createApi({
                 body: credentials,
             }),
         }),
+        checkTokenAuth: builder.query<Data, string>({
+            query: id => `${id}`,
+        }),
     }),
 });
 
-export const { useLoginMutation, useProtectedMutation, useRegisterMutation } =
-    authApi;
+export const {
+    useLoginMutation,
+    useProtectedMutation,
+    useRegisterMutation,
+    useCheckTokenAuthQuery,
+} = authApi;
