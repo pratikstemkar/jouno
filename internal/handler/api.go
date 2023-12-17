@@ -1,6 +1,8 @@
 package handler
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"github.com/gofiber/fiber/v2"
+)
 
 func HelloHandler(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{
@@ -10,7 +12,7 @@ func HelloHandler(c *fiber.Ctx) error {
 	})
 }
 
-func Health(c *fiber.Ctx) error {
+func HealthHandler(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{
 		"status":  "success",
 		"message": "System Healthy!",
