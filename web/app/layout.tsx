@@ -35,10 +35,10 @@ export default function RootLayout({
                     {process.env.NEXT_PUBLIC_ENV === "dev" && <DevAlert />}
                     <StoreProvider>
                         {" "}
-                        {/* <div> */}
-                        <Navbar />
-                        {children}
-                        {/* </div> */}
+                        <div>
+                            <Navbar />
+                            {children}
+                        </div>
                         <Footer />
                     </StoreProvider>
                 </ThemeProvider>

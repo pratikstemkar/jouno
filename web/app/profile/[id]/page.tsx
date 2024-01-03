@@ -86,8 +86,9 @@ const Page = ({ params }: { params: { id: string } }) => {
                 </>
             )}
             {error && (
-                <main className="flex w-full justify-center items-center">
-                    Error loading the profile. Go back to{" "}
+                <main className="flex w-full justify-center items-center mt-10 lg:mt-20">
+                    Error loading the profile. Maybe the profile does not exist.
+                    Check the username or Go back to{" "}
                     <Link
                         href="/"
                         className="text-blue-500 underline ml-1"
@@ -98,7 +99,7 @@ const Page = ({ params }: { params: { id: string } }) => {
                 </main>
             )}
             {isLoading && (
-                <main className="flex w-full justify-center items-center">
+                <main className="flex w-full justify-center items-center mt-10 lg:mt-20">
                     <Loader2Icon className="animate-spin h-10 w-10" />
                 </main>
             )}
