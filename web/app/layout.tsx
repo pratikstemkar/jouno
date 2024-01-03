@@ -5,8 +5,11 @@ import { ThemeProvider } from "@/components/theme-provider";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import DevAlert from "@/components/layout/DevAlert";
+import StoreProvider from "@/components/StoreProvider";
 
 const inter = Inter({ subsets: ["latin"] });
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
     title: `${process.env.NEXT_PUBLIC_APP_NAME}`,
@@ -30,11 +33,14 @@ export default function RootLayout({
                     disableTransitionOnChange
                 >
                     {process.env.NEXT_PUBLIC_ENV === "dev" && <DevAlert />}
-                    <div>
-                        <Navbar />
-                        {children}
-                    </div>
-                    <Footer />
+                    <StoreProvider>
+                        {" "}
+                        <div>
+                            <Navbar />
+                            {children}
+                        </div>
+                        <Footer />
+                    </StoreProvider>
                 </ThemeProvider>
             </body>
         </html>

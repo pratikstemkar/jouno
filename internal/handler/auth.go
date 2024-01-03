@@ -65,15 +65,24 @@ func Login(c *fiber.Ctx) error {
 	}
 
 	type UserData struct {
-		ID       uuid.UUID `json:"uuid"`
+		ID       uuid.UUID `json:"id"`
 		Username string    `json:"username"`
 		Email    string    `json:"email"`
 		Password string    `json:"password"`
 		Roles    []string  `json:"roles"`
 	}
 
+	type UserResponse struct {
+		ID       uuid.UUID `json:"id"`
+		Username string    `json:"username"`
+		Email    string    `json:"email"`
+		Avatar   string    `json:"avatar"`
+		Roles    []string  `json:"roles"`
+	}
+
 	input := new(LoginInput)
 	var userData UserData
+	var userResponse UserResponse
 
 	if err := c.BodyParser(&input); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
@@ -107,6 +116,13 @@ func Login(c *fiber.Ctx) error {
 			Password: userModel.Password,
 			Roles:    GetRolesList(userModel.Roles),
 		}
+		userResponse = UserResponse{
+			ID:       userModel.ID,
+			Username: userModel.Username,
+			Email:    userModel.Email,
+			Avatar:   userModel.Avatar,
+			Roles:    GetRolesList(userModel.Roles),
+		}
 	}
 
 	if !CheckPasswordHash(pass, userData.Password) {
@@ -134,6 +150,26 @@ func Login(c *fiber.Ctx) error {
 		"status":  "success",
 		"message": "Success Login",
 		"data":    t,
+		"user":    userResponse,
 	})
 
+}
+
+func CheckTokenAuth(c *fiber.Ctx) error {
+	id := c.Params("id")
+	token := c.Locals("user").(*jwt.Token)
+
+	if !validToken(token, id) {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"status":  "error",
+			"message": "Invalid Token",
+			"data":    nil,
+		})
+	}
+
+	return c.JSON(fiber.Map{
+		"status":  "success",
+		"message": "Token is valid.",
+		"data":    nil,
+	})
 }

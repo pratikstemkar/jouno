@@ -1,11 +1,14 @@
 package handler
 
 import (
+	"fmt"
 	"jouno/internal/database"
 	"jouno/internal/model"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"
+	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -17,8 +20,11 @@ func hashPassword(password string) (string, error) {
 func validToken(t *jwt.Token, id string) bool {
 	claims := t.Claims.(jwt.MapClaims)
 	uid := string(claims["id"].(string))
+	exp := float64(claims["exp"].(float64))
+	fmt.Println(exp)
+	fmt.Println(time.Now().Unix())
 
-	return uid == id
+	return uid == id && exp > float64(time.Now().Unix())
 }
 
 func validUser(id string, p string) bool {
@@ -65,6 +71,54 @@ func GetUser(c *fiber.Ctx) error {
 	})
 }
 
+func GetProfile(c *fiber.Ctx) error {
+	id := c.Params("id")
+	db := database.DB
+	var user model.User
+	db.Preload("Roles").Find(&user, "username = ?", id)
+	if user.Username == "" {
+		return c.Status(404).JSON(fiber.Map{
+			"status":  "error",
+			"message": "No User found with ID",
+			"data":    nil,
+		})
+	}
+	type Profile struct {
+		ID        uuid.UUID `json:"id"`
+		Username  string    `json:"username"`
+		Email     string    `json:"email"`
+		Name      string    `json:"name"`
+		Bio       string    `json:"bio"`
+		Location  string    `json:"location"`
+		Pronouns  string    `json:"pronouns"`
+		Website   string    `json:"website"`
+		Gender    string    `json:"gender"`
+		Avatar    string    `json:"avatar"`
+		Banner    string    `json:"banner"`
+		Verified  bool      `json:"verified"`
+		CreatedAt time.Time
+	}
+	var profile Profile
+	profile.ID = user.ID
+	profile.Username = user.Username
+	profile.Email = user.Email
+	profile.Name = user.Name
+	profile.Bio = user.Bio
+	profile.Location = user.Location
+	profile.Pronouns = user.Pronouns
+	profile.Website = user.Website
+	profile.Gender = user.Gender
+	profile.Avatar = user.Avatar
+	profile.Banner = user.Banner
+	profile.Verified = user.Verified
+	profile.CreatedAt = user.CreatedAt
+	return c.JSON(fiber.Map{
+		"status":  "success",
+		"message": "Profile Found",
+		"data":    profile,
+	})
+}
+
 func CreateUser(c *fiber.Ctx) error {
 	type NewUser struct {
 		Username string `json:"username"`
@@ -90,6 +144,17 @@ func CreateUser(c *fiber.Ctx) error {
 		})
 	}
 
+	var role model.Role
+	db.Find(&role, "name = ?", "user")
+	if role.Name == "" {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"status":  "error",
+			"message": "Error fetching role to add to user",
+			"data":    err,
+		})
+	}
+	user.Roles = append(user.Roles, role)
+	user.Avatar = "https://i.pinimg.com/1200x/63/17/29/631729e14e006e3616471749d8336eac.jpg"
 	user.Password = hash
 	if err := db.Create(&user).Error; err != nil {
 		return c.Status(500).JSON(fiber.Map{
@@ -113,6 +178,7 @@ func CreateUser(c *fiber.Ctx) error {
 
 func UpdateUser(c *fiber.Ctx) error {
 	type UpdateUserInput struct {
+		ID       string `json:"id"`
 		Name     string `json:"name"`
 		Pronouns string `json:"pronouns"`
 		Banner   string `json:"banner"`
@@ -136,7 +202,7 @@ func UpdateUser(c *fiber.Ctx) error {
 	token := c.Locals("user").(*jwt.Token)
 
 	if !validToken(token, id) {
-		return c.Status(500).JSON(fiber.Map{
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
 			"status":  "error",
 			"message": "Invalid token id",
 			"data":    nil,

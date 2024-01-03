@@ -7,6 +7,7 @@ import {
     HoverCardContent,
     HoverCardTrigger,
 } from "@/components/ui/hover-card";
+import { Suspense } from "react";
 
 const ProfileHoverCard = () => {
     return (

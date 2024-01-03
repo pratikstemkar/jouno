@@ -1,0 +1,50 @@
+version: "3.8"
+
+name: jouno
+services:
+    server:
+        build:
+            context: .
+            target: final
+        ports:
+            - 8080:8080
+        environment:
+            - PORT=8080
+            - APP_ENV=local
+            - DB_HOST=db
+            - DB_PORT=5432
+            - DB_DATABASE=jouno
+            - DB_USERNAME=postgres
+            - DB_PASSWORD=postgres
+            - JWT_SECRET=jhdufy125e7123g
+        depends_on:
+            db:
+                condition: service_healthy
+        networks:
+            - backend
+        links:
+            - db
+    db:
+        image: postgres
+        restart: always
+        user: postgres
+        environment:
+            - POSTGRES_PASSWORD=postgres
+            - POSTGRES_DB=jouno
+            - PGUSER=postgres
+        ports:
+            - 5432:5432
+        volumes:
+            - db-data:/var/lib/postgresql/data
+        networks:
+            - backend
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+
+volumes:
+    db-data:
+networks:
+    backend:

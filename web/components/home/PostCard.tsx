@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/tooltip";
 import ProfileHoverCard from "./ProfileHoverCard";
 import { HeartIcon, MessageSquareIcon, Share2Icon } from "lucide-react";
+import { Suspense } from "react";
 
 const PostCard = () => {
     return (
