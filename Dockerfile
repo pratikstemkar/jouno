@@ -35,7 +35,7 @@ RUN adduser \
 USER appuser
 
 COPY --from=build /bin/server /bin/
-COPY .env /
+# COPY .env /
 
 EXPOSE 8080
 
