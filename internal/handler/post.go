@@ -11,7 +11,7 @@ import (
 func GetAllPosts(c *fiber.Ctx) error {
 	db := database.DB
 	var posts []model.Post
-	db.Find(&posts)
+	db.Preload("User").Find(&posts)
 	if len(posts) == 0 {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 			"status":  "error",
