@@ -30,6 +30,6 @@ func ConnectDB() {
 	defer cancel()
 
 	fmt.Println("Connection Opened to Database")
-	DB.AutoMigrate(&model.User{}, model.Role{})
+	DB.AutoMigrate(&model.User{}, model.Role{}, model.Post{}, model.Comment{})
 	fmt.Println("Database Migrated")
 }
