@@ -15,48 +15,48 @@ import {
 } from "@/components/ui/tooltip";
 import ProfileHoverCard from "./ProfileHoverCard";
 import { HeartIcon, MessageSquareIcon, Share2Icon } from "lucide-react";
-import { Suspense } from "react";
+import {
+    convertTimestampToReadableTimeProfile,
+    convertTimestampToRelativeTime,
+} from "@/lib/utils";
 
-const PostCard = () => {
+export interface PostData {
+    id: string;
+    title: string;
+    body: string;
+    image: string;
+    userID: string;
+    User: any;
+    CreatedAt: string;
+}
+
+const PostCard = (props: PostData) => {
     return (
         <Card>
             <CardHeader>
-                <CardDescription className="flex space-x-2">
-                    <ProfileHoverCard />
-                    <span> &#8226; </span>
+                <CardDescription className="flex space-x-2 items-center">
+                    <ProfileHoverCard {...props?.User} />
+                    <span>&#8226;</span>
                     <TooltipProvider>
                         <Tooltip>
                             <TooltipTrigger>
-                                <span>10 mins ago</span>
+                                {convertTimestampToRelativeTime(
+                                    props?.CreatedAt
+                                )}
                             </TooltipTrigger>
                             <TooltipContent>
-                                <p>
-                                    Exact time with timezone. Maybe time of your
-                                    timezone.
-                                </p>
+                                {convertTimestampToReadableTimeProfile(
+                                    props?.CreatedAt
+                                )}
                             </TooltipContent>
                         </Tooltip>
                     </TooltipProvider>
                 </CardDescription>
-                <CardTitle>hahah</CardTitle>
+                <CardTitle>{props?.title}</CardTitle>
             </CardHeader>
-            <CardContent>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Beatae
-                eaque saepe culpa voluptas iste laudantium quod deleniti vitae
-                amet. Autem, repudiandae? Ab eius ut sint sit commodi sapiente
-                nihil eveniet? Lorem ipsum dolor sit amet consectetur,
-                adipisicing elit. Sint accusamus, rerum provident autem enim sed
-                quasi deserunt corporis exercitationem placeat. Incidunt quos
-                minus nobis aliquid optio dolores nesciunt laborum voluptates!
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Culpa
-                recusandae nesciunt distinctio cum, sunt dolorum ea esse at
-                laboriosam eos vero repellendus! Facilis magnam eveniet ipsum
-                dolorum similique sit obcaecati.
-            </CardContent>
+            <CardContent>{props?.body}</CardContent>
             <CardFooter>
-                <Button variant={"ghost"}>
-                    <HeartIcon className="h-5 w-5 text-primary" />
-                </Button>
+                <HeartIcon className="h-5 w-5 mx-2 text-primary transition ease-in-out delay-100 duration-300 hover:scale-125 hover:cursor-pointer active:text-indigo-500" />
                 <Button variant={"ghost"}>
                     <MessageSquareIcon className="h-5 w-5" />
                 </Button>

@@ -32,9 +32,8 @@ export default function RootLayout({
                     enableSystem
                     disableTransitionOnChange
                 >
-                    {process.env.NEXT_PUBLIC_ENV === "dev" && <DevAlert />}
                     <StoreProvider>
-                        {" "}
+                        {process.env.NEXT_PUBLIC_ENV === "dev" && <DevAlert />}
                         <div>
                             <Navbar />
                             {children}
