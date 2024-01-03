@@ -14,9 +14,8 @@ import (
 
 func ConnectDB() {
 	var err error
-	p := config.Config("DB_PORT")
-	port, err := strconv.ParseUint(p, 10, 32)
-
+	// p := config.Config("DB_PORT")
+	port, err := strconv.Atoi(config.Config("DB_PORT"))
 	if err != nil {
 		panic("failed to parse database port")
 	}
