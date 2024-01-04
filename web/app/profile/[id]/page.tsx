@@ -20,7 +20,7 @@ const Page = ({ params }: { params: { id: string } }) => {
     const { data, error, isLoading } = useGetProfileQuery(profileId);
 
     return (
-        <div className="max-w-5xl m-auto">
+        <div className="max-w-5xl m-auto px-2 lg:px-0">
             {data && (
                 <>
                     <Image
@@ -28,11 +28,11 @@ const Page = ({ params }: { params: { id: string } }) => {
                         alt="profile banner image"
                         height={100}
                         width={1200}
-                        className="rounded-3xl"
+                        className="rounded-xl"
                     />
-                    <div className="px-10">
+                    <div className="px-4 lg:px-10">
                         <div className="flex justify-between items-center">
-                            <Avatar className="h-40 w-40 -mt-20 hover:cursor-pointer">
+                            <Avatar className="h-20 w-20 lg:h-40 lg:w-40 -mt-10 lg:-mt-20 hover:cursor-pointer">
                                 <AvatarImage src={data?.data?.avatar} />
                                 <AvatarFallback>
                                     {data?.data?.username}
@@ -50,15 +50,15 @@ const Page = ({ params }: { params: { id: string } }) => {
                                 @{data?.data?.username}
                             </span>
                             <p>{data?.data?.bio}</p>
-                            <div className="flex space-x-4 mt-2 items-center text-sm">
+                            <div className="flex flex-wrap mt-2 items-center text-sm">
                                 {data?.data?.location && (
-                                    <div className="flex space-x-1 items-center">
+                                    <div className="flex space-x-1 mr-2 items-center">
                                         <MapPinIcon className="h-4 w-4 text-slate-500" />
                                         <span>{data?.data?.location}</span>
                                     </div>
                                 )}
                                 {data?.data?.website && (
-                                    <div className="flex space-x-1 items-center">
+                                    <div className="flex space-x-1 mr-2 items-center">
                                         <LinkIcon className="h-4 w-4 text-slate-500" />
                                         <a
                                             href={`https://${data?.data?.website}`}
@@ -70,7 +70,7 @@ const Page = ({ params }: { params: { id: string } }) => {
                                     </div>
                                 )}
                                 {data?.data?.CreatedAt && (
-                                    <div className="flex space-x-1 items-center">
+                                    <div className="flex space-x-1 mr-2 items-center">
                                         <CalendarDaysIcon className="h-4 w-4 text-slate-500" />
                                         <span className="">
                                             Joined{" "}

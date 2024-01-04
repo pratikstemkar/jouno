@@ -36,4 +36,16 @@ func SetupRoutes(app *fiber.App) {
 	auth.Post("/login", handler.Login)
 	auth.Post("/register", handler.CreateUser)
 	auth.Get("/:id", middleware.Protected(), handler.CheckTokenAuth)
+
+	post := v1.Group("/post")
+	post.Post("", middleware.Protected(), handler.CreatePost)
+	post.Get("", handler.GetAllPosts)
+	post.Get("/:id", handler.GetPost)
+	post.Delete("/:id", middleware.Protected(), handler.DeletePost)
+
+	comment := v1.Group("/comment")
+	post.Post("/:postID/comment", middleware.Protected(), handler.CreateComment)
+	post.Get("/:postID/comments", handler.GetAllComments)
+	comment.Get("/:id", handler.GetComment)
+	comment.Delete("/:id", middleware.Protected(), handler.DeleteComment)
 }

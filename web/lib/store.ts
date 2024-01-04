@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import { authApi } from "./services/auth";
 import authReducer from "./features/authSlice";
 import { profileApi } from "./services/profile";
+import { postApi } from "./services/post";
 
 export const makeStore = () => {
     return configureStore({
@@ -9,11 +10,13 @@ export const makeStore = () => {
             [authApi.reducerPath]: authApi.reducer,
             auth: authReducer,
             [profileApi.reducerPath]: profileApi.reducer,
+            [postApi.reducerPath]: postApi.reducer,
         },
         middleware: getDefaultMiddleware =>
             getDefaultMiddleware()
                 .concat(authApi.middleware)
-                .concat(profileApi.middleware),
+                .concat(profileApi.middleware)
+                .concat(postApi.middleware),
     });
 };
 

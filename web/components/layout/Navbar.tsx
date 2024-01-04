@@ -32,16 +32,16 @@ const Navbar = () => {
 
     return (
         <>
-            <nav className="flex justify-between w-full px-20 py-2 items-center">
-                <div className="text-4xl tracking-tighter font-extrabold hover:text-primary hover:cursor-pointer">
+            <nav className="flex justify-between w-full px-5 lg:px-20 py-2 items-center">
+                <div className="text-3xl tracking-tighter font-extrabold transition ease-in-out duration-200 hover:text-primary hover:cursor-pointer">
                     <a href="/">
                         <div className="flex justify-center items-center">
-                            <Image
+                            {/* <Image
                                 src="/logo.png"
                                 alt="Logo"
                                 width={35}
                                 height={75}
-                            />
+                            /> */}
                             <span>{process.env.NEXT_PUBLIC_APP_NAME}</span>
                         </div>
                     </a>

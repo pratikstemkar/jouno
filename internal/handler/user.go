@@ -150,7 +150,7 @@ func CreateUser(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"status":  "error",
 			"message": "Error fetching role to add to user",
-			"data":    err,
+			"data":    nil,
 		})
 	}
 	user.Roles = append(user.Roles, role)

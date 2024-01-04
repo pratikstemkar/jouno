@@ -71,11 +71,14 @@ export const UserNav = (props: UserNavProps) => {
                     {/* <DropdownMenuItem>Billing</DropdownMenuItem>
                     <DropdownMenuItem>Settings</DropdownMenuItem>
                     <DropdownMenuItem>New Team</DropdownMenuItem> */}
+                    <DropdownMenuItem className="text-slate-500">
+                        Settings (Coming Soon)
+                    </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                     onClick={() => dispatch(logout())}
-                    className="hover:cursor-pointer"
+                    className="hover:cursor-pointer text-primary"
                 >
                     Log out
                 </DropdownMenuItem>
