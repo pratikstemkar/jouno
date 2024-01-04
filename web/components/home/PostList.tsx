@@ -10,7 +10,7 @@ const PostList = () => {
     return (
         <>
             {data &&
-                data?.data?.map((post: any) => (
+                data?.data.map((post: any) => (
                     <PostCard
                         {...post}
                         key={post?.id}

@@ -30,3 +30,12 @@ export function convertTimestampToReadableTimeProfile(
         day: "numeric",
     });
 }
+
+export function sortPosts(postList: any) {
+    return postList.sort((a: any, b: any) => {
+        const dateA = new Date(a.CreatedAt).getTime();
+        const dateB = new Date(b.CreatedAt).getTime();
+
+        return dateA - dateB;
+    });
+}

@@ -14,6 +14,11 @@ export interface Post {
     CreatedAt: string;
 }
 
+export interface CreatePostRequest {
+    title: string;
+    body: string;
+}
+
 export const postApi = createApi({
     reducerPath: "postApi",
     baseQuery: fetchBaseQuery({
@@ -30,7 +35,14 @@ export const postApi = createApi({
         getAllPosts: builder.query<Data, string>({
             query: () => ``,
         }),
+        createPost: builder.mutation<Data, CreatePostRequest>({
+            query: credentials => ({
+                url: ``,
+                method: "POST",
+                body: credentials,
+            }),
+        }),
     }),
 });
 
-export const { useGetAllPostsQuery } = postApi;
+export const { useGetAllPostsQuery, useCreatePostMutation } = postApi;
